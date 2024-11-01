@@ -4,7 +4,7 @@
   "description": "Slack Bot that displays your current bonus balance",
   "main": "src/app.js",
   "scripts": {
-    "start": "tsc && node src/app.js"
+    "start": "tsc && node build/app.js"
 
   },
   "author": "",
