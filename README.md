@@ -5,7 +5,7 @@ A slackbot which reads an excel file from sharepoint and returns a specific colu
 
 ## Creation of the bot 
 ### Setup bot 
-1. [Go to Slack API your apps](resources/docs/internal/aws_account_creation.md)
+1. [Go to Slack API your apps](https://api.slack.com/apps)
 2. Press Create New App and select from scratch
 3. add a name 
 4. Workspace SADE Innovations
