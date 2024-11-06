@@ -14,7 +14,7 @@ A slackbot which reads an excel file from sharepoint and returns a specific colu
     - [Code](#code)
     - [Starting the bot locally](#start)
 - [Hosting on AWS Lambda by deploying it with serverless](#hosting-on-aws-lambda-and-deploying-the-bot-with-serverless)
-    - [Setting up AWS and serverless](#setting-up-aws-and-serverless)
+    - [Setting up AWS and serverless](#installing-and-setting-up-aws-and-serverless)
     - [Hosting on AWS serverless](#hosting)
 
 ## Creating a simple slackbot that can be used locally
@@ -167,7 +167,13 @@ Slackbot-Sharepoint-Excel-Reader
     - Paste the given endpoint to: 
     - Slash commands -> Edit command -> request URL
     - OAuth & Permissions -> Redirect URLs
-5. Go to slack and try typing /your-command. 
-6. The bot should reply with "Hello + your name 👋"
+5. in .env file add SLACK_SIGNIN_SECRET. This can be found [Slack api](https://api.slack.com/apps/) Basic information.
+```yaml
+SLACK_BOT_TOKEN = <your-slack-oauth-token>
+SLACK_APP_TOKEN = this can be deleted or commented out 
+SLACK_SIGNING_SECRET = <your-slack-signin-secret>
+```
+6. Go to slack and try typing /your-command. 
+7. The bot should reply with "Hello + your name 👋"
 
 
