@@ -11,17 +11,19 @@ package:
 
 provider:
   name: aws
-  runtime: nodejs18.x
+  runtime: nodejs20.x
   region: eu-north-1
   environment:
     SLACK_SIGNING_SECRET: ${env:SLACK_SIGNING_SECRET}
     SLACK_BOT_TOKEN: ${env:SLACK_BOT_TOKEN}
 
 functions:
-  slack:
-    handler: build/handler.handler
+  SlackEventHandler:
+    handler: build/RecieveSlackEvent.HandleSlackEvent
     events:
       - http:
           path: slack/events
           method: post
 
+plugins:
+  - serverless-offline

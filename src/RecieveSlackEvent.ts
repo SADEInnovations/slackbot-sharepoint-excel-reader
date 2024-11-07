@@ -1,11 +1,11 @@
 import { APIGatewayProxyEvent, Context, APIGatewayProxyResult, Callback } from 'aws-lambda';
 import dotenv from 'dotenv';
-import { awsLambdaReceiver, getLastCommandDetails, getLastResponseMessage } from './app';
+import { awsLambdaReceiver } from './SlackCommand';
 import { AwsEvent } from '@slack/bolt/dist/receivers/AwsLambdaReceiver';
 
 dotenv.config();
 
-export const handler = async (
+export const HandleSlackEvent = async (
   event: APIGatewayProxyEvent,
   context: Context,
   callback: Callback
@@ -22,13 +22,6 @@ export const handler = async (
     const handler = await awsLambdaReceiver.start();
     const result = await handler(awsEvent, context, callback);
     
-    const commandDetails = getLastCommandDetails();
-    const responseMessage = getLastResponseMessage();
-    
-    if (commandDetails && responseMessage) {
-      console.log("Answer given:", responseMessage);
-    }
-
     return result;
   } catch (error) {
     console.error('Error processing the request:', error);

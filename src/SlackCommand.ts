@@ -7,25 +7,16 @@ export const awsLambdaReceiver = new AwsLambdaReceiver({
   signingSecret: process.env.SLACK_SIGNING_SECRET as string,
 });
 
-export const app = new App({
+export const slackapp = new App({
   token: process.env.SLACK_BOT_TOKEN as string,
   receiver: awsLambdaReceiver,
 });
 
-let lastCommandDetails: { userId: string; command: string } | null = null;
-let lastResponseMessage: string | null = null;
-
-app.command('/bonus', async ({ command, ack, respond }: SlackCommandMiddlewareArgs) => {
+slackapp.command('/bonus', async ({ command, ack, respond }: SlackCommandMiddlewareArgs) => {
   await ack();
   
-  lastCommandDetails = {
-    userId: command.user_id,
-    command: "/bonus"
-  };
-  
   const responseMessage = `Hello, <@${command.user_id}>! 👋`;
-  await respond(responseMessage);
-  lastResponseMessage = responseMessage;  
+  await respond(responseMessage); 
   
   console.log('Slack command executed:', {
     userId: command.user_id,
@@ -34,6 +25,3 @@ app.command('/bonus', async ({ command, ack, respond }: SlackCommandMiddlewareAr
     timestamp: new Date().toISOString()
   });
 });
-
-export const getLastCommandDetails = () => lastCommandDetails;
-export const getLastResponseMessage = () => lastResponseMessage;
