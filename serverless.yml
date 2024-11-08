@@ -19,7 +19,7 @@ provider:
 
 functions:
   slackEventHandler:
-    handler: build/recieveSlackEvent.handleSlackEvent
+    handler: src/functions/slackEventHandler.handleSlackEvent
     events:
       - http:
           path: slack/events

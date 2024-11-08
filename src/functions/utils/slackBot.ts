@@ -39,5 +39,4 @@ export class SlackBot {
     return handler(event, context, callback);
   }
 }
-  
-export const slackBot = new SlackBot();
+
