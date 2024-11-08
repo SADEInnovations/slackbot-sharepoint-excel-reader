@@ -1,7 +1,7 @@
-import { App, SlackCommandMiddlewareArgs, AwsLambdaReceiver } from '@slack/bolt';
-import dotenv from 'dotenv';
+import { App, SlackCommandMiddlewareArgs, AwsLambdaReceiver } from "@slack/bolt";
+import dotenv from "dotenv";
 
-dotenv.config(); 
+dotenv.config();
 
 export class SlackBot {
   private app: App;
@@ -21,13 +21,13 @@ export class SlackBot {
   }
 
   private registerCommands(): void {
-    this.app.command('/bonus', async ({ command, ack, respond }: SlackCommandMiddlewareArgs) => {
+    this.app.command("/bonus", async ({ command, ack, respond }: SlackCommandMiddlewareArgs) => {
       await ack();
       await respond(`Hello, <@${command.user_id}>! 👋`);
 
-      console.log('Slack command executed:', {
+      console.log("Slack command executed:", {
         userId: command.user_id,
-        command: '/bonus',
+        command: "/bonus",
         details: command,
         timestamp: new Date().toISOString(),
       });
@@ -39,4 +39,3 @@ export class SlackBot {
     return handler(event, context, callback);
   }
 }
-

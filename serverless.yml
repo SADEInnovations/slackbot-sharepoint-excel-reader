@@ -1,8 +1,7 @@
 useDotenv: true
 
 service: serverless-slack-bot
-frameworkVersion: '3'
-
+frameworkVersion: "3"
 
 package:
   include:
