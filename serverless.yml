@@ -1,0 +1,28 @@
+useDotenv: true
+
+service: serverless-slack-bot
+frameworkVersion: "3"
+
+package:
+  include:
+    - build/**
+    - node_modules/**
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: eu-north-1
+  environment:
+    SLACK_SIGNING_SECRET: ${env:SLACK_SIGNING_SECRET}
+    SLACK_BOT_TOKEN: ${env:SLACK_BOT_TOKEN}
+
+functions:
+  slackEventHandler:
+    handler: src/functions/slackEventHandler.handleSlackEvent
+    events:
+      - http:
+          path: slack/events
+          method: post
+
+plugins:
+  - serverless-offline
