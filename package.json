@@ -3,17 +3,31 @@
   "version": "0.1.0",
   "description": "Slack Bot that displays your current bonus balance",
   "scripts": {
+    "start": "tsc && node build/app.js",
+    "prettier": "prettier --check --ignore-unknown .",
+    "prettier:fix": "prettier --write --ignore-unknown .",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix .",
+    "clean-code": "npm run prettier:fix && npm run lint:fix",
     "build": "tsc"
   },
   "author": "",
   "dependencies": {
-    "@slack/bolt": "4.0.1",
+    "@slack/bolt": "4.1.0",
     "dotenv": "16.4.5"
   },
   "devDependencies": {
     "@types/aws-lambda": "8.10.145",
     "serverless": "4.4.7",
     "serverless-offline": "14.3.4",
-    "typescript": "5.6.3"
+    "typescript": "5.6.3",
+    "@typescript-eslint/eslint-plugin": "7.18.0",
+    "@typescript-eslint/parser": "7.18.0",
+    "eslint": "8.57.1",
+    "eslint-config-prettier": "9.1.0",
+    "eslint-import-resolver-typescript": "3.6.3",
+    "eslint-plugin-header": "3.1.1",
+    "eslint-plugin-import": "2.31.0",
+    "prettier": "3.3.3"
   }
 }

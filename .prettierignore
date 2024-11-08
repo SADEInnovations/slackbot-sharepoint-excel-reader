@@ -1,0 +1,11 @@
+.DS_store
+.env
+.idea
+.serverless
+.vscode
+.webpack
+_warmup
+coverage
+lib
+node_modules
+package-lock.json
