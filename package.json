@@ -2,11 +2,8 @@
   "name": "slackbot",
   "version": "0.1.0",
   "description": "Slack Bot that displays your current bonus balance",
-  "main": "src/app.js",
   "scripts": {
-    "build": "tsc",
-    "start": "tsc && node build/SlackCommands.js"
-
+    "build": "tsc"
   },
   "author": "",
   "dependencies": {
@@ -16,6 +13,7 @@
   "devDependencies": {
     "@types/aws-lambda": "8.10.145",
     "serverless": "4.4.7",
+    "serverless-offline": "14.3.4",
     "typescript": "5.6.3"
   }
 }

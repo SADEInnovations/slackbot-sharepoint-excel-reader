@@ -18,8 +18,8 @@ provider:
     SLACK_BOT_TOKEN: ${env:SLACK_BOT_TOKEN}
 
 functions:
-  SlackEventHandler:
-    handler: build/RecieveSlackEvent.HandleSlackEvent
+  slackEventHandler:
+    handler: build/recieveSlackEvent.handleSlackEvent
     events:
       - http:
           path: slack/events

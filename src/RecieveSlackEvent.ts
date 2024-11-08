@@ -1,28 +1,12 @@
-import { APIGatewayProxyEvent, Context, APIGatewayProxyResult, Callback } from 'aws-lambda';
-import dotenv from 'dotenv';
-import { awsLambdaReceiver } from './SlackCommand';
-import { AwsEvent } from '@slack/bolt/dist/receivers/AwsLambdaReceiver';
+import { APIGatewayProxyEvent, Context, Callback } from 'aws-lambda';
+import { AwsResponse } from '@slack/bolt/dist/receivers/AwsLambdaReceiver';
+import { slackBot } from './slackBot';
 
-dotenv.config();
-
-export const HandleSlackEvent = async (
-  event: APIGatewayProxyEvent,
-  context: Context,
-  callback: Callback
-): Promise<APIGatewayProxyResult> => {
+export async function handleSlackEvent(event: APIGatewayProxyEvent, context: Context, callback: Callback): Promise<AwsResponse> {
   console.log('Received event:', JSON.stringify(event, null, 2));
-  
+
   try {
-    const awsEvent: AwsEvent = {
-      ...event,
-      multiValueQueryStringParameters: event.multiValueQueryStringParameters || {},
-      multiValueHeaders: event.multiValueHeaders || {},
-    };
-    
-    const handler = await awsLambdaReceiver.start();
-    const result = await handler(awsEvent, context, callback);
-    
-    return result;
+    return await slackBot.processEvent(event, context, callback);
   } catch (error) {
     console.error('Error processing the request:', error);
     return {
@@ -30,4 +14,4 @@ export const HandleSlackEvent = async (
       body: JSON.stringify({ message: 'Internal server error' }),
     };
   }
-};
+}

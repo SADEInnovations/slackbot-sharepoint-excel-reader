@@ -37,14 +37,13 @@ SLACK_SIGNIN_SECRET = <Your Slack Signin Secret>
 npm i serverless -g
 npm install serverless-offline --save-dev
 ```
-2. uncomment the plugins part in serverless.yml
-3. Install ngrok (for mac) by following these steps[here](https://download.ngrok.com/mac-os)
-4. Type serverless offline and ngrok http 3000 in your cli.
-> Using 2 CLIs may be necessary, since typing serverless offline and ngrok http 3000 in the same cli doesnt seem to work
-5. ngrok will give you a forwarding URL. copy it 
-6. go to your app in slack api and go into Slash Commands
-7. after pasting it add "/dev/slack/events" to the urls end
-8. type /bonus to see if it works.
+2. Install ngrok (for mac) by following these steps[here](https://download.ngrok.com/mac-os)
+3.  Type serverless offline and ngrok http 3000 in your cli.
+> Using 2 CLIs may be necessary, since typing serverless offline and ngrok http 3000 in the same cli doesn't seem to work
+4. ngrok will give you a forwarding URL. copy it 
+5. go to your app in slack api and go into Slash Commands
+6. after pasting it add "/dev/slack/events" to the urls end
+7. type /bonus to see if it works.
 
 ## Hosting on AWS Lambda
 ### Installing and setting up AWS
@@ -64,7 +63,6 @@ Default output format [None]: JSON
 
 1. type serverless deploy 
 2. When its ready, it will give you an endpoint looking something like "https://6psdswxvx2.execute-api.eu-north-1.amazonaws.com/dev/slack/events"
-> If you do serverless remove at some point, do the next parts again.
 3. Copy the endpoint and go to [Slack api](https://api.slack.com/apps/)
     - Select your app
     - Paste the given endpoint to: 
