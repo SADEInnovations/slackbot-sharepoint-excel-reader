@@ -1,7 +1,4 @@
 import { App, SlackCommandMiddlewareArgs, AwsLambdaReceiver } from "@slack/bolt";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 export class SlackBot {
   private app: App;
