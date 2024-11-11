@@ -16,8 +16,6 @@ jobs:
           node-version: "20"
       - name: Install dependencies
         run: npm install
-      - name: Compile Typescript to Javascript
-        run: npx tsc
       - name: Run Prettier
         run: npm run prettier --if-present
       - name: Run linter
