@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - Bot Deployment
   workflow_dispatch:
 
 env:
