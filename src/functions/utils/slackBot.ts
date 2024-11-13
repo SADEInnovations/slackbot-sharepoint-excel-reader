@@ -1,3 +1,4 @@
+/* Copyright */
 import { App, SlackCommandMiddlewareArgs, AwsLambdaReceiver } from "@slack/bolt";
 
 export class SlackBot {
@@ -29,7 +30,7 @@ export class SlackBot {
         details: command,
         timestamp: new Date().toISOString(),
       });
-      console.log(`Your stage is ${process.env.STAGE}`)
+      console.log(`Your stage is ${process.env.STAGE}`);
     });
   }
 
