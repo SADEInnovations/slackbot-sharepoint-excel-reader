@@ -3,18 +3,28 @@ useDotenv: true
 service: serverless-slack-bot
 frameworkVersion: "3"
 
-package:
-  include:
-    - build/**
-    - node_modules/**
-
 provider:
   name: aws
   runtime: nodejs20.x
   region: eu-north-1
+  stage: ${opt:stage, 'production'}
   environment:
     SLACK_SIGNING_SECRET: ${env:SLACK_SIGNING_SECRET}
     SLACK_BOT_TOKEN: ${env:SLACK_BOT_TOKEN}
+    SLACK_BOT_COMMAND: ${self:custom.overrides.${self:provider.stage}.SLACK_BOT_COMMAND}
+    STAGE: ${self:provider.stage}
+
+custom:
+  overrides:
+    dev1:
+      SLACK_BOT_COMMAND: "/dev1"
+      STAGE: "dev1"
+    dev2:
+      SLACK_BOT_COMMAND: "/dev2"
+      STAGE: "dev2"
+    production:
+      SLACK_BOT_COMMAND: "/bonus"
+      STAGE: "production"
 
 functions:
   slackEventHandler:
@@ -25,4 +35,5 @@ functions:
           method: post
 
 plugins:
+  - serverless-esbuild
   - serverless-offline
