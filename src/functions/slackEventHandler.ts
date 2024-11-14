@@ -1,3 +1,4 @@
+/* Copyright */
 import { APIGatewayProxyEvent, Context, Callback } from "aws-lambda";
 import { AwsResponse } from "@slack/bolt/dist/receivers/AwsLambdaReceiver";
 import { SlackBot } from "./utils/slackBot";

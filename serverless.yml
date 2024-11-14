@@ -7,7 +7,7 @@ provider:
   name: aws
   runtime: nodejs20.x
   region: eu-north-1
-  stage: ${opt:stage, 'production'}
+  stage: ${env:STAGE, opt:stage, 'production'}
   environment:
     SLACK_SIGNING_SECRET: ${env:SLACK_SIGNING_SECRET}
     SLACK_BOT_TOKEN: ${env:SLACK_BOT_TOKEN}
