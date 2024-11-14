@@ -1,3 +1,4 @@
+/* Copyright */
 import { App, SlackCommandMiddlewareArgs, AwsLambdaReceiver } from "@slack/bolt";
 
 export class SlackBot {
@@ -18,16 +19,18 @@ export class SlackBot {
   }
 
   private registerCommands(): void {
-    this.app.command("/bonus", async ({ command, ack, respond }: SlackCommandMiddlewareArgs) => {
+    const slackBotCommand = process.env.SLACK_BOT_COMMAND as string;
+    this.app.command(slackBotCommand, async ({ command, ack, respond }: SlackCommandMiddlewareArgs) => {
       await ack();
       await respond(`Hello, <@${command.user_id}>! 👋`);
 
       console.log("Slack command executed:", {
         userId: command.user_id,
-        command: "/bonus",
+        command: slackBotCommand,
         details: command,
         timestamp: new Date().toISOString(),
       });
+      console.log(`Your stage is ${process.env.STAGE}`);
     });
   }
 
