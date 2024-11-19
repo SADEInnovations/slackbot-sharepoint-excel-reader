@@ -5,7 +5,7 @@ on:
 
 jobs:
   code-checking:
-    name: Run Prettier, ESLint and PR Title Check
+    name: Run Prettier, ESLint, PR Title- and version Check
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
