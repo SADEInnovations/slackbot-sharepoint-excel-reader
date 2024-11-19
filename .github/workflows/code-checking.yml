@@ -5,7 +5,7 @@ on:
 
 jobs:
   code-checking:
-    name: Run Prettier and ESLint
+    name: Run Prettier, ESLint and PR Title Check
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -20,3 +20,19 @@ jobs:
         run: npm run prettier --if-present
       - name: Run linter
         run: npm run lint --if-present
+
+      - name: Check PR Title
+        uses: deepakputhraya/action-pr-title@master
+        with:
+          regex: '(^\[\w+-\d+|CHORE|HAR\]\s[\w\d].+$)'
+          min_length: 5
+
+
+      - name: Check version
+        uses: SADEInnovations/version-checker@master
+        id: checker
+        env:
+          INPUT_FILE: "package.json"
+      - name: Results
+        run: echo "Version is ${{ steps.checker.outputs.version }}"
+        
