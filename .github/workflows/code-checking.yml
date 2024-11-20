@@ -42,7 +42,7 @@ jobs:
     steps:
       - uses: deepakputhraya/action-pr-title@master
         with:
-          regex: '^(?:\[?\w+-?\d+|CHORE|HAR\]?\s[\w\d].+$)'
+          regex: '(^\[\w+-\d+|CHORE|FF\]\s[\w\d].+$)'
           min_length: 5
 
   build-issues-checking:
