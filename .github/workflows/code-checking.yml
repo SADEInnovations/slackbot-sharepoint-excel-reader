@@ -5,7 +5,7 @@ on:
 
 jobs:
   code-checking:
-    name: Run Prettier, ESLint, PR Title- and version Check
+    name: Run Prettier and ESLint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -21,13 +21,12 @@ jobs:
       - name: Run linter
         run: npm run lint --if-present
 
-      - name: Check PR Title
-        uses: deepakputhraya/action-pr-title@master
-        with:
-          regex: '(^\[\w+-\d+|CHORE|HAR\]\s[\w\d].+$)'
-          min_length: 5
-
-
+  version-check:
+    name: Run version Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
       - name: Check version
         uses: SADEInnovations/version-checker@master
         id: checker
@@ -35,4 +34,23 @@ jobs:
           INPUT_FILE: "package.json"
       - name: Results
         run: echo "Version is ${{ steps.checker.outputs.version }}"
-        
+
+  PR-title-checking:
+    name: Run PR Title Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - uses: deepakputhraya/action-pr-title@master
+        with:
+          regex: '(^\[\w+-\d+|CHORE|HAR\]\s[\w\d].+$)'
+          min_length: 5
+
+  build-issues-checking:
+    name: Run build issues Check
+    runs-on: ubuntu-latest
+    needs: code-checking
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Run build to check for issues
+        run: npm run build
