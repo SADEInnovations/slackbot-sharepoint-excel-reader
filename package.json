@@ -1,6 +1,6 @@
 {
   "name": "slackbot",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Slack Bot that displays your current bonus balance",
   "scripts": {
     "start": "tsc && node build/app.js",
