@@ -20,3 +20,42 @@ jobs:
         run: npm run prettier --if-present
       - name: Run linter
         run: npm run lint --if-present
+
+  version-check:
+    name: Run version Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Check version
+        uses: SADEInnovations/version-checker@master
+        id: checker
+        env:
+          INPUT_FILE: "package.json"
+      - name: Results
+        run: echo "Version is ${{ steps.checker.outputs.version }}"
+
+  PR-title-checking:
+    name: Run PR Title Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - uses: deepakputhraya/action-pr-title@master
+        with:
+          regex: '(^\[\w+-\d+|CHORE|HAR\s[\w\d].+$)\]'
+          min_length: 5
+
+  build-issues-checking:
+    name: Run build issues Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+      - name: Install dependencies
+        run: npm install
+      - name: Run build to check for issues
+        run: npm run build
