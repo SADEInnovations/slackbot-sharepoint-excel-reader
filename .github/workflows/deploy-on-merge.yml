@@ -21,6 +21,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "20"
+      - name: Verify Node.js version
+        run: node -v
       - name: Install dependencies
         run: npm install
       - name: Serverless deploy
