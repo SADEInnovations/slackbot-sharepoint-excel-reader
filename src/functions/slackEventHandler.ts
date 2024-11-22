@@ -2,6 +2,9 @@
 import { APIGatewayProxyEvent, Context, Callback } from "aws-lambda";
 import { AwsResponse } from "@slack/bolt/dist/receivers/AwsLambdaReceiver";
 import { SlackBot } from "./utils/slackBot";
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 export async function handleSlackEvent(
   event: APIGatewayProxyEvent,

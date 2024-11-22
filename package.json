@@ -13,13 +13,13 @@
   },
   "author": "",
   "dependencies": {
-    "@slack/bolt": "4.1.0",
-    "dotenv": "16.4.5"
+    "@slack/bolt": "4.1.0"
   },
   "devDependencies": {
     "@types/aws-lambda": "8.10.145",
     "@typescript-eslint/eslint-plugin": "7.18.0",
     "@typescript-eslint/parser": "7.18.0",
+    "dotenv": "16.4.5",
     "eslint": "8.57.1",
     "eslint-config-prettier": "9.1.0",
     "eslint-import-resolver-typescript": "3.6.3",
