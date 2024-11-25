@@ -1,44 +1,32 @@
 /* Copyright */
-import fetch from "node-fetch";
 import { getCachedAccessToken } from "./accessToken";
+
+const CACHE_EXPIRATION_TIME = Date.now() + 5 * 60 * 1000;
+const BASE_URL_TEMPLATE =
+  "https://graph.microsoft.com/v1.0/drive/items/{driveItemId}/workbook/worksheets/{worksheetId}/range(address='{range}')";
+
+interface ExcelData {
+  values: string[][];
+}
+
+interface ExcelDataCache {
+  data: ExcelData;
+  expiresAt: number;
+}
+
+function formatUrl(driveItemId: string, worksheetId: string, range: string): string {
+  return BASE_URL_TEMPLATE.replace("{driveItemId}", driveItemId)
+    .replace("{worksheetId}", worksheetId)
+    .replace("{range}", range);
+}
 
 export async function fetchExcelData(
   accessToken: string,
   driveItemId: string,
   worksheetId: string,
   range: string
-): Promise<any> {
-  const url = `https://graph.microsoft.com/v1.0/drive/items/${driveItemId}/workbook/worksheets/${worksheetId}/range(address='${range}')`;
-
-  const response = await fetch(url, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch Excel data: ${response.statusText}`);
-  }
-
-  return await response.json();
-}
-
-const excelDataCache = new Map<string, { data: any; expiresAt: number }>();
-
-export async function fetchExcelDataWithCache(driveItemId: string, worksheetId: string, range: string): Promise<any> {
-  const cacheKey = `${driveItemId}-${worksheetId}-${range}`;
-  const cachedEntry = excelDataCache.get(cacheKey);
-
-  if (cachedEntry && Date.now() < cachedEntry.expiresAt) {
-    console.log("Using cached Excel data");
-    return cachedEntry.data;
-  }
-
-  console.log("Fetching Excel data from API");
-  const accessToken = await getCachedAccessToken();
-  const url = `https://graph.microsoft.com/v1.0/drive/items/${driveItemId}/workbook/worksheets/${worksheetId}/range(address='${range}')`;
+): Promise<ExcelData> {
+  const url = formatUrl(driveItemId, worksheetId, range);
 
   const response = await fetch(url, {
     method: "GET",
@@ -53,7 +41,42 @@ export async function fetchExcelDataWithCache(driveItemId: string, worksheetId: 
   }
 
   const data = await response.json();
-  excelDataCache.set(cacheKey, { data, expiresAt: Date.now() + 5 * 60 * 1000 }); // Cache for 5 minutes
+  return data as ExcelData;
+}
 
-  return data;
+const excelDataCache = new Map<string, ExcelDataCache>();
+
+export async function fetchExcelDataWithCache(
+  driveItemId: string,
+  worksheetId: string,
+  range: string
+): Promise<ExcelData> {
+  const cacheKey = `${driveItemId}-${worksheetId}-${range}`;
+  const cachedEntry = excelDataCache.get(cacheKey);
+
+  if (cachedEntry && Date.now() < cachedEntry.expiresAt) {
+    console.log("Using cached Excel data");
+    return cachedEntry.data;
+  }
+
+  console.log("Fetching Excel data from API");
+  const accessToken = await getCachedAccessToken();
+  const url = formatUrl(driveItemId, worksheetId, range);
+
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch Excel data: ${response.statusText}`);
+  }
+
+  const data = await response.json();
+  excelDataCache.set(cacheKey, { data, expiresAt: CACHE_EXPIRATION_TIME });
+
+  return data as ExcelData;
 }

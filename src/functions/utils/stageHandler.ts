@@ -8,14 +8,12 @@ export function getUserNameForStage(
 
   if (currentStage === "production") {
     userName = slackUserName;
-  } else if (currentStage === "dev1" || currentStage === "dev2") {
+  } else {
     const text = commandText?.trim();
     if (!text) {
       throw new Error("No username provided in dev mode.");
     }
     userName = text;
-  } else {
-    throw new Error("Unsupported stage.");
   }
 
   return userName;

@@ -1,7 +1,18 @@
 /* Copyright */
-import fetch from "node-fetch";
 
-let tokenCache: { token: string; expiresAt: number } | null = null;
+const TOKEN_EXPIRATION_TIME = (expiresIn: number): number => Date.now() + expiresIn * 1000 - 5000;
+
+interface TokenCache {
+  token: string;
+  expiresAt: number;
+}
+
+interface AccessTokenResponse {
+  access_token: string;
+  expires_in: number;
+}
+
+let tokenCache: TokenCache | undefined = undefined;
 
 export async function getCachedAccessToken(): Promise<string> {
   if (tokenCache && Date.now() < tokenCache.expiresAt) {
@@ -30,10 +41,11 @@ export async function getCachedAccessToken(): Promise<string> {
     throw new Error(`Failed to get access token: ${response.statusText}`);
   }
 
-  const data = (await response.json()) as { access_token: string; expires_in: number };
+  const data: AccessTokenResponse = await response.json();
+
   tokenCache = {
     token: data.access_token,
-    expiresAt: Date.now() + data.expires_in * 1000 - 5000, // Subtract 5 seconds to avoid using expired tokens
+    expiresAt: TOKEN_EXPIRATION_TIME(data.expires_in),
   };
 
   return tokenCache.token;
