@@ -1,6 +1,6 @@
 /* Copyright */
 
-const TOKEN_EXPIRATION_TIME = (expiresIn: number): number => Date.now() + expiresIn * 1000 - 5000;
+const TOKEN_EXPIRATION_TIME = (currentTime: number, expiresIn: number): number => currentTime + expiresIn * 1000 - 5000;
 
 interface TokenCache {
   token: string;
@@ -14,8 +14,8 @@ interface AccessTokenResponse {
 
 let tokenCache: TokenCache | undefined = undefined;
 
-export async function getCachedAccessToken(): Promise<string> {
-  if (tokenCache && Date.now() < tokenCache.expiresAt) {
+export async function getCachedAccessToken(currentTime: number = Date.now()): Promise<string> {
+  if (tokenCache && currentTime < tokenCache.expiresAt) {
     console.log("Using cached access token");
     return tokenCache.token;
   }
@@ -45,7 +45,7 @@ export async function getCachedAccessToken(): Promise<string> {
 
   tokenCache = {
     token: data.access_token,
-    expiresAt: TOKEN_EXPIRATION_TIME(data.expires_in),
+    expiresAt: TOKEN_EXPIRATION_TIME(currentTime, data.expires_in),
   };
 
   return tokenCache.token;

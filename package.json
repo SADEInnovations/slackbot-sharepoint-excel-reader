@@ -6,7 +6,7 @@
     "start": "tsc && node build/app.js",
     "prettier": "prettier --check --ignore-unknown .",
     "prettier:fix": "prettier --write --ignore-unknown .",
-    "lint": "eslint",
+    "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "clean-code": "npm run prettier:fix && npm run lint:fix",
     "build": "tsc"

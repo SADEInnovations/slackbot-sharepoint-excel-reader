@@ -1,7 +1,10 @@
 /* Copyright */
 import { getCachedAccessToken } from "./accessToken";
 
-const CACHE_EXPIRATION_TIME = Date.now() + 5 * 60 * 1000;
+const cacheDurationInMinutes = 5;
+const CACHE_EXPIRATION_TIME = (currentTime: number, cacheDurationInMinutes: number): number =>
+  currentTime + cacheDurationInMinutes * 60 * 1000;
+
 const BASE_URL_TEMPLATE =
   "https://graph.microsoft.com/v1.0/drive/items/{driveItemId}/workbook/worksheets/{worksheetId}/range(address='{range}')";
 
@@ -49,12 +52,13 @@ const excelDataCache = new Map<string, ExcelDataCache>();
 export async function fetchExcelDataWithCache(
   driveItemId: string,
   worksheetId: string,
-  range: string
+  range: string,
+  currentTime: number = Date.now()
 ): Promise<ExcelData> {
   const cacheKey = `${driveItemId}-${worksheetId}-${range}`;
   const cachedEntry = excelDataCache.get(cacheKey);
 
-  if (cachedEntry && Date.now() < cachedEntry.expiresAt) {
+  if (cachedEntry && currentTime < cachedEntry.expiresAt) {
     console.log("Using cached Excel data");
     return cachedEntry.data;
   }
@@ -76,7 +80,7 @@ export async function fetchExcelDataWithCache(
   }
 
   const data = await response.json();
-  excelDataCache.set(cacheKey, { data, expiresAt: CACHE_EXPIRATION_TIME });
+  excelDataCache.set(cacheKey, { data, expiresAt: CACHE_EXPIRATION_TIME(currentTime, cacheDurationInMinutes) });
 
   return data as ExcelData;
 }

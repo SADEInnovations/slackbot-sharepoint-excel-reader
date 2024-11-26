@@ -34,3 +34,9 @@ jobs:
           AWS_REGION: ${{ env.AWS_REGION }}
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
           SLACK_SIGNING_SECRET: ${{ secrets.SLACK_SIGNING_SECRET }}
+          EXCEL_DRIVE_ITEM_ID: ${{ secrets.EXCEL_DRIVE_ITEM_ID }}
+          EXCEL_WORKSHEET_ID: ${{ secrets.EXCEL_WORKSHEET_ID }} 
+          TENANT_ID: ${{ secrets.TENANT_ID }}
+          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          RANGE: ${{ secrets.RANGE }}

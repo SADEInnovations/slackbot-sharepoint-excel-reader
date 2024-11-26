@@ -4,6 +4,8 @@ import { fetchExcelDataWithCache } from "./excelApi";
 import { getUserNameForStage } from "./stageHandler";
 import { findUserRow } from "./userRowFinder";
 import { messages } from "./messages";
+import { AwsCallback, AwsEvent, AwsResponse } from "@slack/bolt/dist/receivers/AwsLambdaReceiver";
+import { Handler } from "aws-lambda";
 
 export class SlackBot {
   private app: App;
@@ -29,8 +31,9 @@ export class SlackBot {
     this.app.command(slackBotCommand, async ({ command, ack, respond }: SlackCommandMiddlewareArgs) => {
       await ack();
 
+      let userName = "unkown";
       try {
-        const userName = getUserNameForStage(currentStage, command.text, command.user_name);
+        userName = getUserNameForStage(currentStage, command.text, command.user_name);
 
         const driveItemId = process.env.EXCEL_DRIVE_ITEM_ID as string;
         const worksheetId = process.env.EXCEL_WORKSHEET_ID as string;
@@ -42,8 +45,8 @@ export class SlackBot {
 
         await respond(
           messages.bonusMessage
-            .replace("{remainingTotalBudget}", data.remainingTotalBudget.toString())
-            .replace("{remainingTotalPayable}", data.remainingTotalPayable.toString())
+            .replace("{remainingTotalBudget}", data.usableBonus.toString())
+            .replace("{remainingTotalPayable}", data.payableBonus.toString())
         );
       } catch (error: unknown) {
         console.error("Error processing command:", error);
@@ -52,15 +55,16 @@ export class SlackBot {
           if (error.message === "No username provided in dev mode.") {
             await respond(messages.noUsernameDevMode);
           } else {
-            await respond(messages.slackUserNotFound);
+            await respond(messages.slackUserNotFound.replace("{userName}", userName));
           }
         }
       }
     });
   }
 
-  public async processEvent(event: any, context: any, callback: any): Promise<any> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public processEvent: Handler = async (event: AwsEvent, context: any, callback: AwsCallback): Promise<AwsResponse> => {
     const handler = await this.awsLambdaReceiver.start();
     return handler(event, context, callback);
-  }
+  };
 }

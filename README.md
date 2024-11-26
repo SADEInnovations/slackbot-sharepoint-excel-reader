@@ -7,7 +7,7 @@ A slackbot which reads an excel file from sharepoint and returns a specific colu
 ## Table of Contents
 
 - [Creating a simple slackbot](#creating-a-slackbot)
-  - [Create your own developement stage](#create-your-own-developement-stage)
+  - [Create your own development stage](#create-your-own-development-stage)
   - [Setup bot](#setup-bot)
   - [Code](#code)
 - [Local Testing](#local-testing)
@@ -20,7 +20,7 @@ A slackbot which reads an excel file from sharepoint and returns a specific colu
 
 ## Creating a slackbot
 
-### Create your own developement stage
+### Create your own development stage
 
 1. in serverless.yml, we've defined customs overrides called stages. there's dev1, dev2 and production. define your own and call it what you like.
 2. under them, add it in this form
@@ -41,7 +41,7 @@ your-stages-name:
 4. Workspace: Wherever you want the bot to be
 5. In basic information there is a signin secret. Press show, then copy and paste it somewhere
 6. In OAuth & Permissions there is a Bot user OAuth token. Copy it and paste it somewhere
-7. Create a Slash command for your developement stage. The name of your command is the same you defined in serverless.yml custom overrides
+7. Create a Slash command for your development stage. The name of your command is the same you defined in serverless.yml custom overrides
 
 ### Code
 
@@ -63,7 +63,7 @@ npm i serverless -g
 npm install serverless-offline --save-dev
 ```
 
-2. Export your stage by typing the following in your terminal. Replace your-chosen-stage with your developement stages name
+2. Export your stage by typing the following in your terminal. Replace your-chosen-stage with your development stages name
 
 ```yaml
 export STAGE=<your-chosen-stage>

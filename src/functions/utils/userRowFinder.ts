@@ -1,5 +1,8 @@
 /* Copyright */
-export function findUserRow(excelData: any, userName: string): any {
+
+import { BonusAmounts, ExcelData } from "./types";
+
+export function findUserRow(excelData: ExcelData, userName: string): BonusAmounts {
   const rows = excelData.values;
 
   for (let i = 3; i < rows.length; i++) {
@@ -14,12 +17,15 @@ export function findUserRow(excelData: any, userName: string): any {
     lastColumnUsername = lastColumnUsername.trim().toLowerCase();
 
     if (lastColumnUsername === userName.trim().toLowerCase()) {
-      const remainingTotalBudget = row[1];
-      const remainingTotalPayable = row[2];
+      const remainingTotalBudget = Number(row[1]);
+      const remainingTotalPayable = Number(row[2]);
+
+      if (isNaN(remainingTotalBudget) || isNaN(remainingTotalPayable))
+        throw new Error("Expected a number, got something else.");
 
       return {
-        remainingTotalBudget,
-        remainingTotalPayable,
+        usableBonus: remainingTotalBudget,
+        payableBonus: remainingTotalPayable,
       };
     }
   }
