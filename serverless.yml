@@ -13,6 +13,12 @@ provider:
     SLACK_BOT_TOKEN: ${env:SLACK_BOT_TOKEN}
     SLACK_BOT_COMMAND: ${self:custom.overrides.${self:provider.stage}.SLACK_BOT_COMMAND}
     STAGE: ${self:provider.stage}
+    EXCEL_DRIVE_ITEM_ID: ${env:EXCEL_DRIVE_ITEM_ID}
+    EXCEL_WORKSHEET_ID: ${env:EXCEL_WORKSHEET_ID}
+    TENANT_ID: ${env:TENANT_ID}
+    CLIENT_ID: ${env:CLIENT_ID}
+    CLIENT_SECRET: ${env:CLIENT_SECRET}
+    RANGE: ${env:RANGE}
 
 custom:
   overrides:
