@@ -6,4 +6,5 @@ export interface ExcelData {
 export interface BonusAmounts {
   usableBonus: number;
   payableBonus: number;
+  reservedTotal: number;
 }
