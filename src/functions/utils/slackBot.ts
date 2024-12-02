@@ -44,20 +44,15 @@ export class SlackBot {
         const excelData = await fetchExcelDataWithCache(driveItemId, worksheetId, range);
         const data = findUserRow(excelData, userName);
 
+        let message = messages.bonusMessage
+          .replace("{remainingTotalBudget}", data.usableBonus.toFixed(2))
+          .replace("{remainingTotalPayable}", data.payableBonus.toFixed(2));
+
         if (data.reservedTotal > 0) {
-          await respond(
-            messages.reservedBonusMessage
-              .replace("{remainingTotalBudget}", data.usableBonus.toFixed(2))
-              .replace("{remainingTotalPayable}", data.payableBonus.toFixed(2))
-              .replace("{reservedTotal}", data.reservedTotal.toFixed(2))
-          );
-        } else {
-          await respond(
-            messages.bonusMessage
-              .replace("{remainingTotalBudget}", data.usableBonus.toFixed(2))
-              .replace("{remainingTotalPayable}", data.payableBonus.toFixed(2))
-          );
+          const reservedMessage = messages.reservedMessage.replace("{reservedTotal}", data.reservedTotal.toFixed(2));
+          message = `${message}\n${reservedMessage}`;
         }
+        await respond(message);
       } catch (error: unknown) {
         console.error("Error processing command:", error);
 
