@@ -31,23 +31,28 @@ export class SlackBot {
     this.app.command(slackBotCommand, async ({ command, ack, respond }: SlackCommandMiddlewareArgs) => {
       await ack();
 
-      let userName = "unkown";
+      let userName = "unknown";
       try {
-        userName = getUserNameForStage(currentStage, command.text, command.user_name);
+        const cleanCommandText = command.text.trim();
+        userName = getUserNameForStage(currentStage, cleanCommandText, command.user_name);
 
         const driveItemId = process.env.EXCEL_DRIVE_ITEM_ID as string;
         const worksheetId = process.env.EXCEL_WORKSHEET_ID as string;
-        const range = process.env.RANGE as string;
+        const range = process.env.RANGE as string; // Modify the range in both .env and GitHub secrets, if new data is added to a column that exceeds the current accessible range.
 
         console.log(`Fetching data for ${userName}`);
         const excelData = await fetchExcelDataWithCache(driveItemId, worksheetId, range);
         const data = findUserRow(excelData, userName);
 
-        await respond(
-          messages.bonusMessage
-            .replace("{remainingTotalBudget}", data.usableBonus.toString())
-            .replace("{remainingTotalPayable}", data.payableBonus.toString())
-        );
+        let message = messages.bonusMessage
+          .replace("{remainingTotalBudget}", data.usableBonus.toFixed(2))
+          .replace("{remainingTotalPayable}", data.payableBonus.toFixed(2));
+
+        if (data.reservedTotal > 0) {
+          const reservedMessage = messages.reservedMessage.replace("{reservedTotal}", data.reservedTotal.toFixed(2));
+          message = `${message}\n${reservedMessage}`;
+        }
+        await respond(message);
       } catch (error: unknown) {
         console.error("Error processing command:", error);
 

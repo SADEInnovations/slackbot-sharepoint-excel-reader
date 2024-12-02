@@ -1,5 +1,6 @@
 /* Copyright */
 import { getCachedAccessToken } from "./accessToken";
+import { ExcelData } from "./types";
 
 const cacheDurationInMinutes = 5;
 const CACHE_EXPIRATION_TIME = (currentTime: number, cacheDurationInMinutes: number): number =>
@@ -7,10 +8,6 @@ const CACHE_EXPIRATION_TIME = (currentTime: number, cacheDurationInMinutes: numb
 
 const BASE_URL_TEMPLATE =
   "https://graph.microsoft.com/v1.0/drive/items/{driveItemId}/workbook/worksheets/{worksheetId}/range(address='{range}')";
-
-interface ExcelData {
-  values: string[][];
-}
 
 interface ExcelDataCache {
   data: ExcelData;

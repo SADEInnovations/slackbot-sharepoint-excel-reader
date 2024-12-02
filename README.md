@@ -17,6 +17,7 @@ A slackbot which reads an excel file from sharepoint and returns a specific colu
   - [Register an app with Microsoft Entra](#register-an-app-with-microsoft-entra)
     - [App configuration](#app-configuration)
   - [Get the excel File from personal OneDrive / Sharepoint](#fetch-the-excel-file)
+- [Make bot deployment automatic](#automate-bot-deployment)
 
 ## Creating a slackbot
 
@@ -176,3 +177,10 @@ Default output format [None]: JSON
      > the range can be modified depending on your excel file size.
 
 If all of the postman requests were successful, you can move on. If you encounter problems like accessDenied, it might be because of insufficient permissions.
+
+## Automate bot deployment
+
+1. Head over to your repository and click settings -> Secrets and variables -> New repository secret
+2. Add everything you have in .env to here aswell as your AWS credentials (Access key, Secret access key)
+3. Ensure you have the right policies set up for the account you want to use for deployment to AWS
+4. Deployment can be started from actions, or by merging a branch to master
