@@ -19,6 +19,12 @@ provider:
     CLIENT_ID: ${env:CLIENT_ID}
     CLIENT_SECRET: ${env:CLIENT_SECRET}
     RANGE: ${env:RANGE}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - lambda:InvokeFunction
+      Resource:
+        - arn:aws:lambda:${self:provider.region}:${aws:accountId}:function:${self:custom.workerLambdaName}
 
 custom:
   overrides:
@@ -31,6 +37,7 @@ custom:
     production:
       SLACK_BOT_COMMAND: "/bonus"
       STAGE: "production"
+  workerLambdaName: ${self:service}-${self:provider.stage}-worker
 
 functions:
   slackEventHandler:
@@ -39,6 +46,12 @@ functions:
       - http:
           path: slack/events
           method: post
+    environment:
+      WORKER_LAMBDA_NAME: ${self:custom.workerLambdaName}
+
+  worker:
+    handler: src/functions/worker.handleWorkerEvent
+    timeout: 30
 
 plugins:
   - serverless-esbuild
