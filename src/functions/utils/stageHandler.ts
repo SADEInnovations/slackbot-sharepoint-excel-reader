@@ -2,12 +2,15 @@
 export function getUserNameForStage(
   currentStage: string,
   commandText: string | undefined,
-  slackUserName: string
+  user_name: string
 ): string {
   let userName: string;
 
   if (currentStage === "production") {
-    userName = slackUserName;
+    if (!user_name) {
+      throw new Error("Slack username is undefined or empty.");
+    }
+    userName = user_name; 
   } else {
     const text = commandText?.trim();
     if (!text) {
