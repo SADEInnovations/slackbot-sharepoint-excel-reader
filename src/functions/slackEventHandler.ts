@@ -41,7 +41,6 @@ export async function handleSlackEvent(event: APIGatewayProxyEvent): Promise<API
     }
 
     const responseUrl = body.response_url;
-    const commandText = body.text;
 
     if (!responseUrl) {
       throw new Error("Missing response_url in the request body.");
@@ -52,7 +51,7 @@ export async function handleSlackEvent(event: APIGatewayProxyEvent): Promise<API
       commandText: body.text || "",
       stage: process.env.STAGE,
       username: body.user_name,
-      userID: body.user_id
+      userID: body.user_id,
     };
 
     const invokeCommand = new InvokeCommand({
