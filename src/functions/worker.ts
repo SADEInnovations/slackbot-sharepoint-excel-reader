@@ -19,6 +19,7 @@ export async function handleWorkerEvent(event: WorkerEvent): Promise<void> {
 
     userName = getUserNameForStage(currentStage, event.commandText, event.username);
 
+    console.log(`Fetching data for ${userName}`);
     const excelData = await fetchExcelDataWithCache(
       process.env.EXCEL_DRIVE_ITEM_ID as string,
       process.env.EXCEL_WORKSHEET_ID as string,

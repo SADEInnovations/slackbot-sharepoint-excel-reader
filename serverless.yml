@@ -9,8 +9,6 @@ provider:
   region: eu-north-1
   stage: ${env:STAGE, opt:stage, 'production'}
   environment:
-    SLACK_SIGNING_SECRET: ${env:SLACK_SIGNING_SECRET}
-    SLACK_BOT_TOKEN: ${env:SLACK_BOT_TOKEN}
     SLACK_BOT_COMMAND: ${self:custom.overrides.${self:provider.stage}.SLACK_BOT_COMMAND}
     STAGE: ${self:provider.stage}
     EXCEL_DRIVE_ITEM_ID: ${env:EXCEL_DRIVE_ITEM_ID}
@@ -19,12 +17,7 @@ provider:
     CLIENT_ID: ${env:CLIENT_ID}
     CLIENT_SECRET: ${env:CLIENT_SECRET}
     RANGE: ${env:RANGE}
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - lambda:InvokeFunction
-      Resource:
-        - arn:aws:lambda:${self:provider.region}:${aws:accountId}:function:${self:custom.workerLambdaName}
+    WORKER_LAMBDA_NAME: ${self:custom.workerLambdaName}
 
 custom:
   overrides:
@@ -46,13 +39,18 @@ functions:
       - http:
           path: slack/events
           method: post
+    role: slackEventHandlerRole
     environment:
       WORKER_LAMBDA_NAME: ${self:custom.workerLambdaName}
 
   worker:
     handler: src/functions/worker.handleWorkerEvent
     timeout: 30
+    role: workerLambdaLoggingRole
 
 plugins:
   - serverless-esbuild
   - serverless-offline
+
+resources:
+  - ${file(./iam-roles.yml)}

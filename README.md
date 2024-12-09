@@ -40,20 +40,13 @@ your-stages-name:
 2. Press Create New App and select from scratch
 3. add a name
 4. Workspace: Wherever you want the bot to be
-5. In basic information there is a signin secret. Press show, then copy and paste it somewhere
-6. In OAuth & Permissions there is a Bot user OAuth token. Copy it and paste it somewhere
-7. Create a Slash command for your development stage. The name of your command is the same you defined in serverless.yml custom overrides
+5. Create a Slash command for your development stage. The name of your command is the same you defined in serverless.yml custom overrides
 
 ### Code
 
 1. Clone the repository
 2. Install needed dependencies
 3. create a .env file
-
-```yaml
-SLACK_BOT_TOKEN = <Your Bot User OAuth token>
-SLACK_SIGNIN_SECRET = <Your Slack Signin Secret>
-```
 
 ## Hosting on AWS Lambda
 

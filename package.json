@@ -1,6 +1,6 @@
 {
   "name": "slackbot",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Slack Bot that displays your current bonus balance",
   "scripts": {
     "start": "tsc && node build/app.js",
@@ -14,10 +14,10 @@
   },
   "author": "",
   "dependencies": {
-    "@aws-sdk/client-lambda": "3.699.0",
     "@slack/bolt": "4.1.0"
   },
   "devDependencies": {
+    "@aws-sdk/client-lambda": "3.699.0",
     "@types/aws-lambda": "8.10.145",
     "@typescript-eslint/eslint-plugin": "7.18.0",
     "@typescript-eslint/parser": "7.18.0",
