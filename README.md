@@ -10,9 +10,9 @@ A slackbot which reads an excel file from sharepoint and returns a specific colu
   - [Create your own development stage](#create-your-own-development-stage)
   - [Setup bot](#setup-bot)
   - [Code](#code)
-- [Local Testing](#local-testing)
 - [Hosting on AWS lambda](#hosting-on-aws-lambda)
   - [Installing and setting up AWS](#installing-and-setting-up-aws)
+  - [Local Testing](#local-testing)
 - [Using Mircosoft Graph API to fetch an excel file from sharepoint](#using-mircosoft-graph-api-to-get-an-excel-file-from-sharepoint)
   - [Register an app with Microsoft Entra](#register-an-app-with-microsoft-entra)
     - [App configuration](#app-configuration)
@@ -40,44 +40,13 @@ your-stages-name:
 2. Press Create New App and select from scratch
 3. add a name
 4. Workspace: Wherever you want the bot to be
-5. In basic information there is a signin secret. Press show, then copy and paste it somewhere
-6. In OAuth & Permissions there is a Bot user OAuth token. Copy it and paste it somewhere
-7. Create a Slash command for your development stage. The name of your command is the same you defined in serverless.yml custom overrides
+5. Create a Slash command for your development stage. The name of your command is the same you defined in serverless.yml custom overrides
 
 ### Code
 
 1. Clone the repository
 2. Install needed dependencies
 3. create a .env file
-
-```yaml
-SLACK_BOT_TOKEN = <Your Bot User OAuth token>
-SLACK_SIGNIN_SECRET = <Your Slack Signin Secret>
-```
-
-## Local Testing
-
-1. Install serverless and serverless offline for local testing
-
-```yaml
-npm i serverless -g
-npm install serverless-offline --save-dev
-```
-
-2. Export your stage by typing the following in your terminal. Replace your-chosen-stage with your development stages name
-
-```yaml
-export STAGE=<your-chosen-stage>
-```
-
-3. Install ngrok (for mac) by following these steps[here](https://download.ngrok.com/mac-os)
-4. Type serverless offline and ngrok http 3000 in your cli.
-   > Using 2 CLIs may be necessary, since typing serverless offline and ngrok http 3000 in the same cli doesn't seem to work
-5. ngrok will give you a forwarding URL. copy it
-6. go to your app in slack api and go into Slash Commands and select the same command as your chosen stage
-7. after pasting it add "/YOUR-STAGE/slack/events" to the urls end. Replace YOUR-STAGE with the stage you chose
-8. the command depends on your stage, for dev1 its /dev1, dev2 /dev2, and for production its /bonus.
-9. Type the command depending on your stage E.g in direct messages on slack.
 
 ## Hosting on AWS Lambda
 
@@ -107,6 +76,31 @@ Default output format [None]: JSON
    - OAuth & Permissions -> Redirect URLs
 4. Type your command in slack and go into your aws console -> CloudWatch -> Log groups -> Select your log stream
    - There should be a log which shows the recieved event and that a slack command was executed
+
+## Local Testing
+
+1. Install serverless and serverless offline for local testing
+
+```yaml
+npm i serverless -g
+npm install serverless-offline --save-dev
+```
+
+2. Export your stage by typing the following in your terminal. Replace your-chosen-stage with your development stages name
+
+```yaml
+export STAGE=<your-chosen-stage>
+```
+
+3. Install ngrok (for mac) by following these steps[here](https://download.ngrok.com/mac-os)
+4. Type serverless offline and ngrok http 3000 in your cli.
+   > Using 2 CLIs may be necessary, since typing serverless offline and ngrok http 3000 in the same cli doesn't seem to work
+   > Make sure you have deployed your bot to AWS first, otherwise serverless offline cant find the other lambda function.
+5. ngrok will give you a forwarding URL. copy it
+6. go to your app in slack api and go into Slash Commands and select the same command as your chosen stage
+7. after pasting it add "/YOUR-STAGE/slack/events" to the urls end. Replace YOUR-STAGE with the stage you chose
+8. the command depends on your stage, for dev1 its /dev1, dev2 /dev2, and for production its /bonus.
+9. Type the command depending on your stage E.g in direct messages on slack.
 
 ## Using Mircosoft Graph API to fetch an excel file from sharepoint
 
