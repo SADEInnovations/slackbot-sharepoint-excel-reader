@@ -18,7 +18,7 @@ A slackbot which reads an excel file from sharepoint and returns a specific colu
     - [App configuration](#app-configuration)
   - [Get the excel File from personal OneDrive / Sharepoint](#fetch-the-excel-file)
 - [Make bot deployment automatic](#automate-bot-deployment)
-- [Limiting Graph API permisions to a specific site]
+- [Limiting Graph API permisions to a specific site](#limit-microsoft-graph-api-permissions-to-a-specific-site)
 
 ## Creating a slackbot
 
