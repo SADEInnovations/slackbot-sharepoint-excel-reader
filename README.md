@@ -45,7 +45,7 @@ your-stages-name:
 4. Workspace: Wherever you want the bot to be
 5. Go to Oauth & Permissions and add a redirect URL. It can be for example https://localhost
 6. Create a Slash command for your development stage. The name of your command is the same you defined in serverless.yml custom overrides
-![](images/Slack_Slash_Command.png)
+   ![](images/Slack_Slash_Command.png)
 
 ### Code
 
@@ -78,7 +78,7 @@ Default output format [None]: JSON
    - Select your app
    - Paste the given endpoint to:
    - Slash commands -> Choose the command depending on your stage -> Edit command -> request URL
-   ![](images/Request_Url_Slash_Command.png)
+     ![](images/Request_Url_Slash_Command.png)
 4. Type your command in slack and go into your aws console -> CloudWatch -> Log groups -> Select your log stream
    - There should be a log which shows the recieved event and that a slack command was executed
 
@@ -156,36 +156,36 @@ export STAGE=<your-chosen-stage>
 
       Press send. It should give you an output looking something like this
 
-   ```yaml
-    "token_type": "Bearer",
-   "expires_in": "3599",
-   "ext_expires_in": 3599,
-   "access_token": "your access token"
-   ```
+```yaml
+ "token_type": "Bearer",
+"expires_in": "3599",
+"ext_expires_in": 3599,
+"access_token": "your access token"
+```
 
-   #### for all the next parts
+#### for all the next parts
 
-   > GET request
-   > add a header -> Authorization:Bearer {your-access-token}
+> GET request
+> add a header -> Authorization:Bearer {your-access-token}
 
-   - looking for an excel file
+- looking for an excel file
 
-     > the url is https://graph.microsoft.com/v1.0/drive/search(q='.xlsx')
-     > It should give you an output with all the excel files found. Find the one you're looking for and write down the id below createdDateTime
-     > Add the id to .env as EXCEL_DRIVE_ITEM_ID={your-excel-file-id}
-    ![](images/Look_For_Excel_Files.png)
+  > the url is https://graph.microsoft.com/v1.0/drive/search(q='.xlsx')
+  > It should give you an output with all the excel files found. Find the one you're looking for and write down the id below createdDateTime
+  > Add the id to .env as EXCEL_DRIVE_ITEM_ID={your-excel-file-id}
+  > ![](images/Look_For_Excel_Files.png)
 
-   - getting worksheet id
+- getting worksheet id
 
-     > the url is https://graph.microsoft.com/v1.0/drive/items/{your-excel-file-id}/workbook/worksheets/
-     > find the one you're looking for. In the next part you can access it to see if its the right one
-     > Add the id to .env as EXCEL_WORKSHEET_ID={your-worksheet-id}. Keep the curly brackets on this
-    ![](images/Worksheet_ID.png)
+  > the url is https://graph.microsoft.com/v1.0/drive/items/{your-excel-file-id}/workbook/worksheets/
+  > find the one you're looking for. In the next part you can access it to see if its the right one
+  > Add the id to .env as EXCEL_WORKSHEET_ID={your-worksheet-id}. Keep the curly brackets on this
+  > ![](images/Worksheet_ID.png)
 
-   - accessing the excel file
-     > the url is https://graph.microsoft.com/v1.0/drive/items('your-excel-file-id')/workbook/worksheets('{your-worksheet-id}')/range(address='A1:N42')
-     > the range can be modified depending on your excel file size.
-     ![](images/Access_Excel_File.png)
+- accessing the excel file
+  > the url is https://graph.microsoft.com/v1.0/drive/items('your-excel-file-id')/workbook/worksheets('{your-worksheet-id}')/range(address='A1:N42')
+  > the range can be modified depending on your excel file size.
+  > ![](images/Access_Excel_File.png)
 
 If all of the postman requests were successful, you can move on. If you encounter problems like accessDenied, it might be because of insufficient permissions.
 
@@ -195,34 +195,21 @@ If all of the postman requests were successful, you can move on. If you encounte
 2. Add everything you have in .env to here aswell as your AWS credentials (Access key, Secret access key)
 3. Ensure you have the right policies set up for the account you want to use for deployment to AWS
 4. Deployment can be started from actions, or by merging a branch to master
-![](images/GitHub_Secrets.png)
+   ![](images/GitHub_Secrets.png)
 
 ## Limit Microsoft Graph API permissions to a specific site
 
 1. For this, there is a good guide on [github gist](https://gist.github.com/ruanswanepoel/14fd1c97972cabf9ca3d6c0d9c5fc542). Either follow it or follow the instructions here
 2. Previously we made requests using postman to get enviroment variables such as EXCEL_DRIVE_ITEM_ID. We'll be doing the same here
-3. Give your Graph API new permissions. *Sites.FullControl.All* and *Sites.Selected* 
+3. Give your Graph API new permissions. _Sites.FullControl.All_ and _Sites.Selected_
    > Granting admin consent is necessary
 4. Make a request to get a new access token. We have done it previously [here](#fetch-the-excel-file)
-5.  Create a new POST request to this address https://graph.microsoft.com/v1.0/sites/{Site-ID}/permissions add a header Authorization with value Beater YOUR-ACCESS-TOKEN and add a raw JSON body looking like this.
-![](images/Permission_Granting.png)
+5. Create a new POST request to this address https://graph.microsoft.com/v1.0/sites/{Site-ID}/permissions add a header Authorization with value Beater YOUR-ACCESS-TOKEN and add a raw JSON body looking like this.
+   ![](images/Permission_Granting.png)
+
    > Site ID can be obtained by making a get request to https://graph.microsoft.com/v1.0/sites. The id part should look something like this: simplypress1.sharepoint.com,(beb83f0e-b0bb-49de-beb7-50e209ee90c3 <- THIS IS THE SITE ID),bc13d239-edae-4536-8c46-5eee295bfd7a.
-   ![](images/Look_For_Sites.png)
-```yaml
-{
-    "roles": [
-        "read"
-    ],
-    "grantedToIdentities": [
-        {
-            "application": {
-                "id": "{client_id}", <- your apps client id
-                "displayName": "{app_name}"
-            }
-        }
-    ]
-}
-```
-6. The response should be 201 Created. 
-7. Now remove every other permissions but leave *Sites.Selected*. 
-8. Try making a get request to the site https://graph.microsoft.com/v1.0/sites/{Site-ID}, it should give you a 200 OK response. Trying to make a request to any other site than the one you gave permissions to, should give you 403 Forbidden. 
+   > ![](images/Look_For_Sites.png)
+
+6. The response should be 201 Created.
+7. Now remove every other permissions but leave _Sites.Selected_.
+8. Try making a get request to the site https://graph.microsoft.com/v1.0/sites/{Site-ID}, it should give you a 200 OK response. Trying to make a request to any other site than the one you gave permissions to, should give you 403 Forbidden.
