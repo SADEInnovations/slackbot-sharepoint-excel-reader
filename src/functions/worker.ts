@@ -3,6 +3,7 @@ import { getUserNameForStage } from "./utils/stageHandler";
 import { fetchExcelDataWithCache } from "./utils/excelApi";
 import { findUserRow } from "./utils/userRowFinder";
 import { messages } from "./utils/messages";
+import { sendSlackResponse } from "./utils/sendSlackResponse";
 
 interface WorkerEvent {
   commandText: string;
@@ -12,9 +13,8 @@ interface WorkerEvent {
 
 export async function handleWorkerEvent(event: WorkerEvent): Promise<void> {
   let userName: string = "";
+  const currentStage = process.env.STAGE as string;
   try {
-    const currentStage = process.env.STAGE as string;
-
     console.log("Received event:", JSON.stringify(event, null, 2));
 
     userName = getUserNameForStage(currentStage, event.commandText, event.username);
@@ -40,19 +40,7 @@ export async function handleWorkerEvent(event: WorkerEvent): Promise<void> {
       message = `${message}\n${reservedMessage}`;
     }
 
-    const response = await fetch(event.responseUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        text: message,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to send response to Slack: ${response.statusText}`);
-    }
+    await sendSlackResponse(event.responseUrl, message);
 
     console.log("Bonus information sent successfully.");
   } catch (error) {
@@ -60,33 +48,14 @@ export async function handleWorkerEvent(event: WorkerEvent): Promise<void> {
 
     if (error instanceof Error) {
       if (error.message === "No username provided in dev mode.") {
-        const response = await fetch(event.responseUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            text: messages.noUsernameDevMode,
-          }),
-        });
+        await sendSlackResponse(event.responseUrl, messages.noUsernameDevMode);
+      } else if (error.message === "Already Claimed") {
+        const claimedMessage = messages.alreadyInUseMessage.replace("{currentStage}", currentStage);
 
-        if (!response.ok) {
-          throw new Error(`Failed to send error response to Slack: ${response.statusText}`);
-        }
+        await sendSlackResponse(event.responseUrl, claimedMessage);
       } else {
-        const response = await fetch(event.responseUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            text: messages.slackUserNotFound.replace("{userName}", userName),
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error(`Failed to send error response to Slack: ${response.statusText}`);
-        }
+        const userNotFoundMessage = messages.slackUserNotFound.replace("{userName}", userName);
+        await sendSlackResponse(event.responseUrl, userNotFoundMessage);
       }
     }
   }
