@@ -143,9 +143,9 @@ export STAGE=<your-chosen-stage>
 
 Use postman. See BonusBot vault in 1PassWord for the secrets.
 
-   - Getting an access token
-     > POST request to the url "https://login.microsoftonline.com/{your-tenant-id}/oauth2/v2.0/token"
-     > Add a header -> Content-Type:application/x-www-form-urlencoded
+- Getting an access token
+  > POST request to the url "https://login.microsoftonline.com/{your-tenant-id}/oauth2/v2.0/token"
+  > Add a header -> Content-Type:application/x-www-form-urlencoded
 
 ![](images/Access_Token_Req1.png)
 
