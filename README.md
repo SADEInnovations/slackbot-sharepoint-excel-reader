@@ -107,7 +107,7 @@ export STAGE=<your-chosen-stage>
 8. the command depends on your stage, for dev1 its /dev1, dev2 /dev2, and for production its /bonus.
 9. Type the command depending on your stage E.g in direct messages on slack.
 
-## Using Mircosoft Graph API to fetch an excel file from sharepoint
+## Using Microsoft Graph API to fetch an excel file from sharepoint
 
 ### Register an app with Microsoft Entra
 
@@ -121,6 +121,10 @@ export STAGE=<your-chosen-stage>
 5. Choose a name
 6. For supported account types, choose what fits with the type of application your doing. [about them here](https://learn.microsoft.com/en-us/security/zero-trust/develop/identity-supported-account-types)
 7. For redirect url put http://localhost and then click register
+8. In Microsoft Entra -> applications -> app registrations choose your app
+9. Go to API permissions
+10. Click add a permission -> Microsoft Graph -> Application permissions and look for Files.Read.All and Sites.Read.All
+11. Click grant admin consent.
 
 #### App Configuration
 
@@ -135,18 +139,13 @@ export STAGE=<your-chosen-stage>
 ![](images/IDs.png)
 ![](images/Client_Secret.png)
 
-### Fetch the excel file
+### Fetch the excel file (and updating the file details yearly)
 
-1. In Microsoft Entra -> applications -> app registrations choose your app
-2. Go to API permissions
-3. Click add a permission -> Microsoft Graph -> Application permissions and look for Files.Read.All and Sites.Read.All
-4. Click grant admin consent.
-   > Tools like Postman or Microsoft Graph Explorer are great for testing purposes. I'll be using postman here
-5. Open postman and create a requests for
+Use postman. See BonusBot vault in 1PassWord for the secrets.
 
-   - Getting an access token
-     > POST request to the url "https://login.microsoftonline.com/{your-tenant-id}/oauth2/v2.0/token"
-     > Add a header -> Content-Type:application/x-www-form-urlencoded
+- Getting an access token
+  > POST request to the url "https://login.microsoftonline.com/{your-tenant-id}/oauth2/v2.0/token"
+  > Add a header -> Content-Type:application/x-www-form-urlencoded
 
 ![](images/Access_Token_Req1.png)
 
@@ -163,29 +162,31 @@ export STAGE=<your-chosen-stage>
 "access_token": "your access token"
 ```
 
-#### for all the next parts
+#### for all the next parts, use Bearer Token authorization and copy the received token into the Token field
 
-> GET request
-> add a header -> Authorization:Bearer {your-access-token}
+You will need 2 pieces of data from the Graph API. The ID for the new yearly file and the ID of the excel sheet called **"Status"**
 
-- looking for an excel file
+##### GET: https://graph.microsoft.com/v1.0/sites/sadeinnovations.sharepoint.com
 
-  > the url is https://graph.microsoft.com/v1.0/drive/search(q='.xlsx')
-  > It should give you an output with all the excel files found. Find the one you're looking for and write down the id below createdDateTime
-  > Add the id to .env as EXCEL_DRIVE_ITEM_ID={your-excel-file-id}
-  > ![](images/Look_For_Excel_Files.png)
+From here you will get the site ID. It is in the response in "id" field, the GUID after the drive name
 
-- getting worksheet id
+##### GET https://graph.microsoft.com/v1.0/sites/{site-id}/drives
 
-  > the url is https://graph.microsoft.com/v1.0/drive/items/{your-excel-file-id}/workbook/worksheets/
-  > find the one you're looking for. In the next part you can access it to see if its the right one
-  > Add the id to .env as EXCEL_WORKSHEET_ID={your-worksheet-id}. Keep the curly brackets on this
-  > ![](images/Worksheet_ID.png)
+This will list the drives, there is only 1. Get the drive ID from "id" field.
 
-- accessing the excel file
-  > the url is https://graph.microsoft.com/v1.0/drive/items('your-excel-file-id')/workbook/worksheets('{your-worksheet-id}')/range(address='A1:N42')
-  > the range can be modified depending on your excel file size.
-  > ![](images/Access_Excel_File.png)
+##### GET https://graph.microsoft.com/v1.0/drives/{drive-id}/root:/SADE Innovations Private/Henkilöstöetu/Bonuslist 2025.xlsx
+
+Here you need to update the folder and file name in the request to point to the correct file for the year you are trying to locate. You can figure that out by going to the file with the browser. You need a user with enough rights to see the file. This will give you the Graph API ID for the file. It is in the "id" field in the response. Put the file id in the EXCEL_DRIVE_ITEM_ID env variable (secret in Github)
+
+##### GET https://graph.microsoft.com/v1.0/drives/{drive-id}/items/{file-id}/workbook/worksheets
+
+This will give you the IDs of the worksheet. Locate the one which is named "Status" and put that id into the EXCEL_WORKSHEET_ID env variable (including the curly brackets)
+
+#### When you have the IDs required
+
+- Update the secrets in Github
+- Deploy
+- Update the values to 1PassWord too
 
 If all of the postman requests were successful, you can move on. If you encounter problems like accessDenied, it might be because of insufficient permissions.
 
